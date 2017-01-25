@@ -51,3 +51,39 @@ def note_list():
     results = cur.fetchall()
     for row in results:
         print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
+
+def narrowed_lists(items_per_page):
+    if isinstance(items_per_page, int):
+        cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes LIMIT ? ''', [items_per_page])
+        results = cur.fetchall()
+        for row in results:
+            print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
+
+        cur.execute('''SELECT COUNT(Note) FROM PyNotes''')
+        result = cur.fetchone()
+        num_of_rows = result[0]
+        new_offset = items_per_page
+        new_limit = items_per_page
+
+        while new_limit < (num_of_rows + 1):
+            response = input('Press N to go to Next Page or Q to quit > ')
+            new_limit += items_per_page
+
+            if response == 'N' or response == 'n':
+                cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes LIMIT ? OFFSET ?''',(items_per_page, new_offset))
+                results = cur.fetchall()
+
+                for row in results:
+                    print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
+
+                new_offset += items_per_page
+
+            elif response == 'Q' or response == 'q':
+                break
+
+            else: print('Invalid Input')
+
+    else: pass
+
+def close_db():
+    conn.close()
