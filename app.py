@@ -38,7 +38,7 @@ def docopt_cmd(func):
         except DocoptExit as e:
             # The DocoptExit is thrown when the args do not match.
 
-            print('Invalid Command!')
+            print('\nInvalid Command! Also check the number of arguments that can be passed in \'Usage:\' below.')
             print(e)
             return
 
@@ -72,7 +72,8 @@ class PyNote(cmd.Cmd):
     @docopt_cmd
     def do_view(self, arg):
         """Usage: view <note_id>"""
-        print(arg)
+        note_id = num_check(arg)
+        view_note(note_id)
 
     @docopt_cmd
     def do_delete(self, arg):
@@ -95,8 +96,10 @@ class PyNote(cmd.Cmd):
     \tPyNote search <query_string>
     \tPyNote list
     \tPyNote help
+    \n\tWords ecnclosed in guillemetes '< >' should guide you on the acceptable number of arguments,
+    \texcept when they appear like this: '< >...' when any number of arguments is allowed.
 
-    ++++type exit to close the app++++'''
+                                       ||type exit to close the app||'''
     )
 
     def do_exit(self, arg):
