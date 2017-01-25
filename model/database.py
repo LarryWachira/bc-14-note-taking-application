@@ -10,14 +10,13 @@ cur.execute('''CREATE TABLE IF NOT EXISTS PyNotes
 conn.commit()
 
 def create_note(note_content):
-    conn
     cur.execute('''INSERT INTO PyNotes(Note) VALUES(?)''', [note_content])
     conn.commit()
-    conn.close()
 
 def view_note(note_id):
-    cur.execute()
-    pass
+    cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes WHERE Id = ?''', [note_id])
+    note = cur.fetchone()
+    print('\n\tNote ID: ' + str(note[0]) + '\n\tDate Added: ' + str(note[2]) + '\n\n\tNote: ' + note[1])
 
 def delete_note(note_id):
     pass
