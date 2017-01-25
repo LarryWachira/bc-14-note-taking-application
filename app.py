@@ -53,9 +53,8 @@ def docopt_cmd(func):
     fn.__dict__.update(func.__dict__)
     return fn
 
-
 class PyNote(cmd.Cmd):
-    intro = '\n\t\tWelcome to PyNote!\n-Type help for a list for instructions on how to use PyNote'
+    intro = '\n\t\t\t\tWelcome to PyNote!\n\t    -Type help for a list for instructions on how to use the app.'
     prompt = '\nPlease type a command >> '
     file = None
     ts = time.time()
@@ -77,6 +76,21 @@ class PyNote(cmd.Cmd):
     @docopt_cmd
     def do_delete(self, arg):
         """Usage: delete <note_id>"""
+        note_id = num_check(arg)
+
+        if isinstance(note_id, int):
+            print('\nAre you sure you want to delete:')
+            view_note(note_id)
+            answer = input("Type yes to confirm or anything else to abort > ")
+            if answer == 'yes' or answer == 'YES' or answer == 'Yes':
+                delete_note(note_id)
+                print('Note deleted!')
+            else:
+                print('Operation Cancelled!')
+
+    @docopt_cmd
+    def do_list(self, arg):
+        """Usage: list"""
         pass
 
     @docopt_cmd
@@ -94,20 +108,20 @@ class PyNote(cmd.Cmd):
     def do_help(self, arg):
         """Usage: help"""
         print('''
-    Commands:
-    \tcreate <note_content>...   |  Creates a new note
-    \tview <note_id>             |  Views the note that has the given Id
-    \tdelete <note_id>           |  Deletes the note that has the given Id
-    \tsearch <query_string>...   |  Searches all notes that have the given keyword
-    \tlist                       |  Lists all stored notes
-    \thelp                       |  Help instructions
+      \t\t\t\t   Commands:
+      \t   create <note_content>...|  Creates a new note
+      \t   view <note_id>          |  Views the note that has the given Id
+      \t   delete <note_id>        |  Deletes the note that has the given Id
+      \t   search <query_string>...|  Searches all notes that have the given keyword
+      \t   list                    |  Lists all stored notes
+      \t   help                    |  Help instructions
 
-    \t-Words ecnclosed in guillemetes '< >' should guide you on the required number of arguments,
-    \t except when they appear like this: '< >...' when any number of arguments is allowed.
-    \t-Separate different arguments with a space.
+      \t-Words enclosed in guillemetes '< >' should guide you on the required number
+      \t of arguments, except when they appear like this: '< >...' when any number
+      \t of arguments is allowed.
+      \t-Separate different arguments with a space.
 
-                                  ||Type exit to close the app||'''
-    )
+                           ||Type exit to close the app||''')
 
     def do_exit(self, arg):
         """Exits Interactive Mode."""
