@@ -1,9 +1,11 @@
+
+
 """
 Usage:
     PyNote create <note_content>...
     PyNote view <note_id>
     PyNote delete <note_id>
-    PyNote search <query_string>
+    PyNote search <query_string>...
     PyNote list
     PyNote help
     PyNote (-i | --interactive)
@@ -21,9 +23,6 @@ import time
 from docopt import docopt, DocoptExit
 from controller.functions import *
 from model.database import *
-
-
-# from functions import *
 
 
 def docopt_cmd(func):
@@ -56,7 +55,7 @@ def docopt_cmd(func):
 
 
 class PyNote(cmd.Cmd):
-    intro = 'Welcome to PyNote!'
+    intro = '\n\t\tWelcome to PyNote!\n-Type help for a list for instructions on how to use PyNote'
     prompt = '\nPlease type a command >> '
     file = None
     ts = time.time()
@@ -81,25 +80,33 @@ class PyNote(cmd.Cmd):
         pass
 
     @docopt_cmd
-    def do_search(self, arg):
-        """Usage: search <query_string>"""
+    def do_list(self, arg):
+        """Usage: list"""
         pass
+
+    @docopt_cmd
+    def do_search(self, args):
+        """Usage: search <query_string>..."""
+        query_string = query_to_string(args)
+        note_search(query_string)
 
     @docopt_cmd
     def do_help(self, arg):
         """Usage: help"""
         print('''
-    Usage:
-    \tPyNote create <note_content>...
-    \tPyNote view <note_id>
-    \tPyNote delete <note_id>
-    \tPyNote search <query_string>
-    \tPyNote list
-    \tPyNote help
-    \n\tWords ecnclosed in guillemetes '< >' should guide you on the acceptable number of arguments,
-    \texcept when they appear like this: '< >...' when any number of arguments is allowed.
+    Commands:
+    \tcreate <note_content>...   |  Creates a new note
+    \tview <note_id>             |  Views the note that has the given Id
+    \tdelete <note_id>           |  Deletes the note that has the given Id
+    \tsearch <query_string>...   |  Searches all notes that have the given keyword
+    \tlist                       |  Lists all stored notes
+    \thelp                       |  Help instructions
 
-                                       ||type exit to close the app||'''
+    \t-Words ecnclosed in guillemetes '< >' should guide you on the required number of arguments,
+    \t except when they appear like this: '< >...' when any number of arguments is allowed.
+    \t-Separate different arguments with a space.
+
+                                  ||Type exit to close the app||'''
     )
 
     def do_exit(self, arg):
