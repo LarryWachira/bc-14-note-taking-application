@@ -6,7 +6,7 @@ Usage:
     PyNote view <note_id>
     PyNote delete <note_id>
     PyNote search <query_string>...
-    PyNote list
+    PyNote list --limit [<items_per_page>]
     PyNote help
     PyNote (-i | --interactive)
     PyNote (-h | --help)
@@ -89,43 +89,53 @@ class PyNote(cmd.Cmd):
                 print('Operation Cancelled!')
 
     @docopt_cmd
-    def do_list(self, arg):
-        """Usage: list"""
-        pass
-
-    @docopt_cmd
-    def do_list(self, arg):
-        """Usage: list"""
-        pass
-
-    @docopt_cmd
     def do_search(self, args):
         """Usage: search <query_string>..."""
         query_string = query_to_string(args)
         note_search(query_string)
+
+    # def do_divided_search(self, args):
+    #     """Usage: search <query_string>..."""
+    #     query_string = query_to_string(args)
+    #     note_search(query_string)
+
+    @docopt_cmd
+    def do_list(self, arg):
+        """Usage: list --limit [<items_per_page>]"""
+        if arg['<items_per_page>'] is None:
+            note_list()
+        else:
+            items_per_page = num_check_limit(arg)
+            narrowed_lists(items_per_page)
+
+    @docopt_cmd
+    def do_import_export(self, arg):
+        """Usage: list"""
+        pass
 
     @docopt_cmd
     def do_help(self, arg):
         """Usage: help"""
         print('''
       \t\t\t\t   Commands:
-      \t   create <note_content>...|  Creates a new note
-      \t   view <note_id>          |  Views the note that has the given Id
-      \t   delete <note_id>        |  Deletes the note that has the given Id
-      \t   search <query_string>...|  Searches all notes that have the given keyword
-      \t   list                    |  Lists all stored notes
-      \t   help                    |  Help instructions
+      \t   create <note_content>...       |  Creates a new note
+      \t   view <note_id>                 |  Views the note that has the given Id
+      \t   delete <note_id>               |  Deletes the note that has the given Id
+      \t   search <query_string>...       |  Searches all notes that have the given keyword
+      \t   list [--limit <items_per_page>]|  Lists all stored notes
+      \t   help                           |  Help instructions
 
       \t-Words enclosed in guillemetes '< >' should guide you on the required number
       \t of arguments, except when they appear like this: '< >...' when any number
       \t of arguments is allowed.
+      \t-Square brackets '[]' denote optional arguments.
       \t-Separate different arguments with a space.
 
                            ||Type exit to close the app||''')
 
     def do_exit(self, arg):
         """Exits Interactive Mode."""
-
+        close_db()
         print('Good Bye!')
         exit()
 
