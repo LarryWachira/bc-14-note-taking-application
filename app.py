@@ -1,20 +1,28 @@
 """
 Usage:
-    app note create <note_content>
-    app note view <note_id>
-    app note delete <note_id>
-    app note search <query_string>
-    app note exit
-    app note (-i | --interactive)
-    app note (-h | --help)
+    PyNote create <note_content>...
+    PyNote view <note_id>
+    PyNote delete <note_id>
+    PyNote search <query_string>
+    PyNote list
+    PyNote help
+    PyNote (-i | --interactive)
+    PyNote (-h | --help)
 Options:
     -i, --interactive  Interactive Mode
     -h, --help  Show this screen and exit.
+    type exit to close the app
 """
 
-import sys
 import cmd
+import datetime
+import sys
+import time
 from docopt import docopt, DocoptExit
+from controller.functions import *
+from model.database import *
+
+
 # from functions import *
 
 
@@ -48,19 +56,23 @@ def docopt_cmd(func):
 
 
 class PyNote(cmd.Cmd):
-    intro = 'Welcome to my PyNote!'
-    prompt = 'Please type a command'
+    intro = 'Welcome to PyNote!'
+    prompt = '\nPlease type a command >> '
     file = None
+    ts = time.time()
+    date_time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 
     @docopt_cmd
-    def do_create(self, arg):
-        """Usage: add <note_content>"""
-        pass
+    def do_create(self, args):
+        """Usage: create <note_content>..."""
+        note_content = list_to_string(args)
+        create_note(note_content)
+        print('\n\t\''+ note_content + '\'' + ' | note has been created.\n\t Timestamp | ' + self.date_time)
 
     @docopt_cmd
     def do_view(self, arg):
         """Usage: view <note_id>"""
-        pass
+        print(arg)
 
     @docopt_cmd
     def do_delete(self, arg):
@@ -71,6 +83,22 @@ class PyNote(cmd.Cmd):
     def do_search(self, arg):
         """Usage: search <query_string>"""
         pass
+
+    @docopt_cmd
+    def do_help(self, arg):
+        """Usage: help"""
+        print('''
+    Usage:
+    \tPyNote create <note_content>...
+    \tPyNote view <note_id>
+    \tPyNote delete <note_id>
+    \tPyNote search <query_string>
+    \tPyNote list
+    \tPyNote help
+
+    ++++type exit to close the app++++'''
+    )
+
     def do_exit(self, arg):
         """Exits Interactive Mode."""
 
