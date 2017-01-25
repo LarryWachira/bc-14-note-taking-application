@@ -1,3 +1,5 @@
+
+
 import sqlite3
 
 conn = sqlite3.connect('PyNote.db')
@@ -9,11 +11,9 @@ cur.execute('''CREATE TABLE IF NOT EXISTS PyNotes
                  Date_Added DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')))''')
 conn.commit()
 
-
 def create_note(note_content):
     cur.execute('''INSERT INTO PyNotes(Note) VALUES(?)''', [note_content])
     conn.commit()
-
 
 def view_note(note_id):
     if isinstance(note_id, int):
@@ -25,10 +25,9 @@ def view_note(note_id):
             print('Note does not exist. Try a different Id.')
     else: pass
 
-
 def delete_note(note_id):
-    pass
-
+    cur.execute('''DELETE FROM PyNotes WHERE Id = ?''', [note_id])
+    conn.commit()
 
 def note_search(query_string):
     cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes WHERE Note LIKE ? ''', ['%' + query_string + '%'])
