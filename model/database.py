@@ -6,10 +6,9 @@ conn = sqlite3.connect('PyNote.db')
 cur = conn.cursor()
 
 cur.execute('''CREATE TABLE IF NOT EXISTS PyNotes
-                (Id INTEGER PRIMARY KEY,
-                 Note TEXT NOT NULL,
-                 Date_Added DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')))''')
-conn.commit()
+            (Id INTEGER PRIMARY KEY,
+            Note TEXT NOT NULL,
+            Date_Added DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')))''')
 
 def create_note(note_content):
     cur.execute('''INSERT INTO PyNotes(Note) VALUES(?)''', [note_content])
@@ -31,11 +30,24 @@ def delete_note(note_id):
 
 def note_search(query_string):
     cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes WHERE Note LIKE ? ''', ['%' + query_string + '%'])
-    results = cur.fetchall()
+    results_note = cur.fetchall()
 
-    if len(results) == 0:
+    cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes WHERE Id LIKE ? ''', ['%' + query_string + '%'])
+    results_id = cur.fetchall()
+
+    if len(results_note) == 0 and len(results_id) == 0:
         print("No results found.")
 
-    for row in results:
+    for row in results_note:
         if len(row) > 0:
             print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
+
+    for row in results_id:
+        if len(row) > 0:
+            print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
+
+def note_list():
+    cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes''')
+    results = cur.fetchall()
+    for row in results:
+        print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
