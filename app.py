@@ -5,8 +5,8 @@ Usage:
     PyNote create <note_content>...
     PyNote view <note_id>
     PyNote delete <note_id>
-    PyNote search <query_string>...
-    PyNote list --limit [<items_per_page>]
+    PyNote search <query_string>... [--limit=1]
+    PyNote list [--limit=1]
     PyNote help
     PyNote (-i | --interactive)
     PyNote (-h | --help)
@@ -53,6 +53,7 @@ def docopt_cmd(func):
     fn.__dict__.update(func.__dict__)
     return fn
 
+
 class PyNote(cmd.Cmd):
     intro = '\n\t\t\t\tWelcome to PyNote!\n\t    -Type help for a list for instructions on how to use the app.'
     prompt = '\nPlease type a command >> '
@@ -79,9 +80,10 @@ class PyNote(cmd.Cmd):
         note_id = num_check(arg)
 
         if isinstance(note_id, int):
-            print('\nAre you sure you want to delete:')
+            print('\n  Are you sure you want to delete:')
             view_note(note_id)
-            answer = input("Type yes to confirm or anything else to abort > ")
+            answer = input("\n  Type yes to confirm or anything else to abort > ")
+
             if answer == 'yes' or answer == 'YES' or answer == 'Yes':
                 delete_note(note_id)
                 print('Note deleted!')
@@ -90,27 +92,31 @@ class PyNote(cmd.Cmd):
 
     @docopt_cmd
     def do_search(self, args):
-        """Usage: search <query_string>..."""
+        """Usage: search <query_string>... [--limit=1]"""
         query_string = query_to_string(args)
-        note_search(query_string)
+        items_per_page = num_check_limit(args)
 
-    # def do_divided_search(self, args):
-    #     """Usage: search <query_string>..."""
-    #     query_string = query_to_string(args)
-    #     note_search(query_string)
+        if args['--limit'] is not None:
+            paginated_search(query_string, items_per_page)
+
+        elif args['--limit'] is None:
+            note_search(query_string)
+
+        else:
+            pass
 
     @docopt_cmd
     def do_list(self, arg):
-        """Usage: list --limit [<items_per_page>]"""
-        if arg['<items_per_page>'] is None:
+        """Usage: list [--limit=1]"""
+        if arg['--limit'] is None:
             note_list()
         else:
             items_per_page = num_check_limit(arg)
-            narrowed_lists(items_per_page)
+            paginated_list(items_per_page)
 
     @docopt_cmd
-    def do_import_export(self, arg):
-        """Usage: list"""
+    def do_export(self, arg):
+        """Usage: export"""
         pass
 
     @docopt_cmd
@@ -118,12 +124,12 @@ class PyNote(cmd.Cmd):
         """Usage: help"""
         print('''
       \t\t\t\t   Commands:
-      \t   create <note_content>...       |  Creates a new note
-      \t   view <note_id>                 |  Views the note that has the given Id
-      \t   delete <note_id>               |  Deletes the note that has the given Id
-      \t   search <query_string>...       |  Searches all notes that have the given keyword
-      \t   list [--limit <items_per_page>]|  Lists all stored notes
-      \t   help                           |  Help instructions
+      \t   create <note_content>...                        |  Creates a new note
+      \t   view <note_id>                                  |  Views the note that has the given Id
+      \t   delete <note_id>                                |  Deletes the note that has the given Id
+      \t   search <query_string> --limit [<items_per_page>]|  Searches all notes that have the given keyword
+      \t   list [--limit <items_per_page>]                 |  Lists all stored notes
+      \t   help                                            |  Help instructions
 
       \t-Words enclosed in guillemetes '< >' should guide you on the required number
       \t of arguments, except when they appear like this: '< >...' when any number
@@ -141,6 +147,7 @@ class PyNote(cmd.Cmd):
 
 
 opt = docopt(__doc__, sys.argv[1:])
+
 
 if opt['--interactive']:
     try:
