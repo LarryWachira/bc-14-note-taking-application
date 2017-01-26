@@ -1,6 +1,7 @@
 
 
 import sqlite3
+import json
 
 conn = sqlite3.connect('PyNote.db')
 cur = conn.cursor()
@@ -17,6 +18,7 @@ def create_note(note_content):
 
 
 def view_note(note_id):
+
     if isinstance(note_id, int):
         try:
             cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes WHERE Id = ?''', [note_id])
@@ -24,15 +26,18 @@ def view_note(note_id):
             print('\n\tNote ID: ' + str(note[0]) + '\n\tDate Added: ' + str(note[2]) + '\n\n\tNote: ' + note[1])
         except TypeError:
             print('Note does not exist. Try a different Id.')
-    else: pass
+    else:
+        pass
 
 
 def delete_note(note_id):
+
     cur.execute('''DELETE FROM PyNotes WHERE Id = ?''', [note_id])
     conn.commit()
 
 
 def note_search(query_string):
+
     cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes WHERE Note LIKE ? ''', ['%' + query_string + '%'])
     results_note = cur.fetchall()
 
@@ -52,6 +57,7 @@ def note_search(query_string):
 
 
 def paginated_search(query_string, items_per_page):
+
     if isinstance(items_per_page, int):
 
         cur.execute('''SELECT Note FROM PyNotes
@@ -64,59 +70,69 @@ def paginated_search(query_string, items_per_page):
                     ('%' + query_string + '%', items_per_page))
         results = cur.fetchall()
 
-        for row in results:
-            print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
+        if len(results_all) == 0:
+            print('\n\tNo results found.')
 
-        new_offset = items_per_page
-        count = len(results_all)
+        elif len(results_all) > 0:
+            for row in results:
+                print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
 
-        while new_offset < (count + 1):
-            response = input('\nType N to go to Next Page or Q to quit > ')
+            new_offset = items_per_page
+            count = len(results_all)
 
-            if response == 'N' or response == 'n':
-                cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes
-                            WHERE Note LIKE ? LIMIT ? OFFSET ?''',
-                            ('%' + query_string + '%', items_per_page, new_offset))
-                results = cur.fetchall()
+            while new_offset < (count + 1):
+                response = input('\nType N to go to Next Page or Q to quit > ')
 
-                for row in results:
-                    print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
+                if response == 'N' or response == 'n':
+                    cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes
+                                WHERE Note LIKE ? LIMIT ? OFFSET ?''',
+                                ('%' + query_string + '%', items_per_page, new_offset))
+                    results = cur.fetchall()
 
-                new_offset += items_per_page
+                    for row in results:
+                        print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
 
-            elif response == 'Q' or response == 'q':
-                break
+                    new_offset += items_per_page
 
-            else: print('\n\tInvalid Input')
-            continue
+                elif response == 'Q' or response == 'q':
+                    break
 
-        print('\n\tEnd of notes.')
+                else:
+                    print('\n\tInvalid Input')
+                continue
 
-    else: pass
+            print('\n\tEnd of notes.')
+
+    else:
+        pass
 
 
 def note_list():
+
     cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes''')
     results = cur.fetchall()
+
     for row in results:
         print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
 
 
 def paginated_list(items_per_page):
+
     if isinstance(items_per_page, int):
         cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes LIMIT ? ''', [items_per_page])
         results = cur.fetchall()
+
         for row in results:
             print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
 
         cur.execute('''SELECT COUNT(Note) FROM PyNotes''')
         result = cur.fetchone()
+
         num_of_rows = result[0]
         new_offset = items_per_page
 
         while new_offset < (num_of_rows + 1):
             response = input('\nType N to go to Next Page or Q to quit > ')
-            # new_limit += items_per_page
 
             if response == 'N' or response == 'n':
                 cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes LIMIT ? OFFSET ?''',(items_per_page, new_offset))
@@ -130,13 +146,16 @@ def paginated_list(items_per_page):
             elif response == 'Q' or response == 'q':
                 break
 
-            else: print('Invalid Input')
+            else:
+                print('Invalid Input')
             continue
 
         print('\n\tEnd of notes.')
 
-    else: pass
+    else:
+        pass
 
 
 def close_db():
+
     conn.close()
