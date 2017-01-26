@@ -5,8 +5,8 @@ Usage:
     PyNote create <note_content>...
     PyNote view <note_id>
     PyNote delete <note_id>
-    PyNote search <query_string>... [--limit=1]
-    PyNote list [--limit=1]
+    PyNote search <query_string>... [--limit=N]
+    PyNote list [--limit=N]
     PyNote help
     PyNote (-i | --interactive)
     PyNote (-h | --help)
@@ -23,6 +23,7 @@ import time
 from docopt import docopt, DocoptExit
 from controller.functions import *
 from model.database import *
+from pyfiglet import Figlet
 
 
 def docopt_cmd(func):
@@ -92,7 +93,7 @@ class PyNote(cmd.Cmd):
 
     @docopt_cmd
     def do_search(self, args):
-        """Usage: search <query_string>... [--limit=1]"""
+        """Usage: search <query_string>... [--limit=N]"""
         query_string = query_to_string(args)
         items_per_page = num_check_limit(args)
 
@@ -107,7 +108,7 @@ class PyNote(cmd.Cmd):
 
     @docopt_cmd
     def do_list(self, arg):
-        """Usage: list [--limit=1]"""
+        """Usage: list [--limit=N]"""
         if arg['--limit'] is None:
             note_list()
         else:
@@ -142,7 +143,11 @@ class PyNote(cmd.Cmd):
     def do_exit(self, arg):
         """Exits Interactive Mode."""
         close_db()
-        print('Good Bye!')
+        print('\n' + '*' * 50 + '\n')
+        print('\tThank you for using PyNote!\n')
+        print('*'*50)
+        f = Figlet(font='slant')
+        print(f.renderText('Good Bye!'))
         exit()
 
 
@@ -151,6 +156,10 @@ opt = docopt(__doc__, sys.argv[1:])
 
 if opt['--interactive']:
     try:
+        print('\n'*3)
+        f = Figlet(font='block')
+        print(f.renderText('PyNote'))
+        print('*' * 60)
         print(__doc__)
         PyNote().cmdloop()
     except KeyboardInterrupt:
