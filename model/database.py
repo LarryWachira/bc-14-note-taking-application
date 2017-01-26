@@ -66,7 +66,7 @@ def narrowed_lists(items_per_page):
         new_limit = items_per_page
 
         while new_limit < (num_of_rows + 1):
-            response = input('Press N to go to Next Page or Q to quit > ')
+            response = input('\nPress N to go to Next Page or Q to quit > ')
             new_limit += items_per_page
 
             if response == 'N' or response == 'n':
@@ -82,6 +82,8 @@ def narrowed_lists(items_per_page):
                 break
 
             else: print('Invalid Input')
+
+        print('\nEnd of results.')
 
     else: pass
 
