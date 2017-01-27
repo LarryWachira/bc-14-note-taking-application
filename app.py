@@ -56,7 +56,7 @@ def docopt_cmd(func):
 
 
 class PyNote(cmd.Cmd):
-    intro = '\n\t\t\t\tWelcome to PyNote!\n\t    -Type help for a list for instructions on how to use the app.'
+    intro = '\n\t\t\t\tWelcome to PyNote!\n\t    -Type help for a list for instructions on how to use the app-'
     prompt = '\nPlease type a command >> '
     file = None
     ts = time.time()
@@ -118,7 +118,17 @@ class PyNote(cmd.Cmd):
     @docopt_cmd
     def do_export(self, arg):
         """Usage: export"""
-        pass
+        export_json()
+
+    @docopt_cmd
+    def do_import(self, arg):
+        """Usage: import"""
+        import_json()
+
+    @docopt_cmd
+    def do_sync(self, arg):
+        """Usage: sync"""
+        sync()
 
     @docopt_cmd
     def do_help(self, arg):
@@ -141,7 +151,7 @@ class PyNote(cmd.Cmd):
                            ||Type exit to close the app||''')
 
     def do_exit(self, arg):
-        """Exits Interactive Mode."""
+        """Us"""
         close_db()
         print('\n' + '*' * 50 + '\n')
         print('\tThank you for using PyNote!\n')
@@ -163,4 +173,4 @@ if opt['--interactive']:
         print(__doc__)
         PyNote().cmdloop()
     except KeyboardInterrupt:
-        print("Exiting App")
+        print("\n\tExiting App")
