@@ -2,6 +2,8 @@
 
 import sqlite3
 import json
+from firebase import firebase
+import requests
 
 conn = sqlite3.connect('PyNote.db')
 cur = conn.cursor()
@@ -21,7 +23,7 @@ def view_note(note_id):
 
     if isinstance(note_id, int):
         try:
-            cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes WHERE Id = ?''', [note_id])
+            cur.execute('''SELECT * FROM PyNotes WHERE Id = ?''', [note_id])
             note = cur.fetchone()
             print('\n\tNote ID: ' + str(note[0]) + '\n\tDate Added: ' + str(note[2]) + '\n\n\tNote: ' + note[1])
         except TypeError:
@@ -38,14 +40,14 @@ def delete_note(note_id):
 
 def note_search(query_string):
 
-    cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes WHERE Note LIKE ? ''', ['%' + query_string + '%'])
+    cur.execute('''SELECT * FROM PyNotes WHERE Note LIKE ? ''', ['%' + query_string + '%'])
     results_note = cur.fetchall()
 
-    cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes WHERE Id LIKE ? ''', ['%' + query_string + '%'])
+    cur.execute('''SELECT * FROM PyNotes WHERE Id LIKE ? ''', ['%' + query_string + '%'])
     results_id = cur.fetchall()
 
     if len(results_note) == 0 and len(results_id) == 0:
-        print("No results found.")
+        print("\n\tNo results found.")
 
     for row in results_note:
         if len(row) > 0:
@@ -65,7 +67,7 @@ def paginated_search(query_string, items_per_page):
                     ('%' + query_string + '%',))
         results_all = cur.fetchall()
 
-        cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes
+        cur.execute('''SELECT * FROM PyNotes
                     WHERE Note LIKE ? LIMIT ? ''',
                     ('%' + query_string + '%', items_per_page))
         results = cur.fetchall()
@@ -109,7 +111,7 @@ def paginated_search(query_string, items_per_page):
 
 def note_list():
 
-    cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes''')
+    cur.execute('''SELECT * FROM PyNotes''')
     results = cur.fetchall()
 
     for row in results:
@@ -119,7 +121,7 @@ def note_list():
 def paginated_list(items_per_page):
 
     if isinstance(items_per_page, int):
-        cur.execute('''SELECT Id, Note, Date_Added FROM PyNotes LIMIT ? ''', [items_per_page])
+        cur.execute('''SELECT * FROM PyNotes LIMIT ? ''', [items_per_page])
         results = cur.fetchall()
 
         for row in results:
@@ -156,6 +158,75 @@ def paginated_list(items_per_page):
         pass
 
 
-def close_db():
+def export_json():
+    cur.execute('''SELECT * FROM PyNotes''')
+    database = cur.fetchall()
+    data = json.dumps(database)
 
+    answer = input('\n\tWould you like to export your notes to a database.json file?\n\nType yes or no: ')
+    if answer == 'YES' or answer == 'yes' or answer == 'y' or answer == 'Yes':
+        file = open('database.json', 'w')
+        file.write(data)
+        file.close()
+        print('\n\tNotes export complete. You can find the file in the app directory.')
+
+    elif answer == 'NO' or answer == 'no' or answer == 'n' or answer == 'No':
+        print('\n\tExport operation aborted.')
+
+    else:
+        print('\n\tInvalid input.')
+
+
+def import_json():
+    answer = input('\n\tWould you like to import notes from your back up file?\n\nType yes or no: ')
+
+    if answer == 'YES' or answer == 'yes' or answer == 'y' or answer == 'Yes':
+        try:
+            file = open('database.json', 'r')
+            data = file.read()
+            file.close()
+            rows = json.loads(data)
+
+            for row in rows:
+                cur.execute('''INSERT INTO PyNotes(Id, Note, Date_Added) VALUES(?, ?, ?)''', (row[0], row[1], row[2]))
+                conn.commit()
+
+            print('\n\tImport completed successfully.')
+        except FileNotFoundError:
+            print('\n\tBackup file not found.')
+
+    elif answer == 'NO' or answer == 'no' or answer == 'n' or answer == 'No':
+        print('\n\tImport operation aborted.')
+
+    else:
+        print('\n\tInvalid input.')
+
+
+def sync():
+    try:
+        response = requests.get("https://pynote-536fd.firebaseio.com/")
+        if response.status_code == 200:
+            answer = input('\n\tWould you like to sync your notes to firebase?\n\nType yes or no: ')
+
+            if answer == 'YES' or answer == 'yes' or answer == 'y' or answer == 'Yes':
+                cur.execute('''SELECT * FROM PyNotes''')
+                data = cur.fetchall()
+                fbase = firebase.FirebaseApplication('https://pynote-536fd.firebaseio.com/')
+                result = fbase.post('/db', json.dumps(data))
+                print('\n\tSync successful.\n\tSync snapshot: ', result)
+
+            elif answer == 'NO' or answer == 'no' or answer == 'n' or answer == 'No':
+                print('\n\tSync aborted.')
+
+            else:
+                print('\n\tInvalid input.')
+
+        else:
+            print('\n\tServer Unavailable.')
+
+    except:
+        print('\n\tError occurred.')
+
+
+def close_db():
     conn.close()
