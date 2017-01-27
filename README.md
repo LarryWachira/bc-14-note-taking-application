@@ -6,10 +6,10 @@ You can store notes, view them, search them and even backup them up locally or o
 Here's a usage list highlighting all of it's features:
 
 ##Usage:
-1. PyNote create <note_content>...
-2. PyNote view <note_id>
-3. PyNote delete <note_id>
-4. PyNote search <query_string>... [--limit=N]
+1. PyNote create '<note_content>...'
+2. PyNote view '<note_id>'
+3. PyNote delete '<note_id>'
+4. PyNote search '<query_string>...' [--limit=N]
 5. PyNote list [--limit=N]
 6. *PyNote sync
 7. PyNote import
@@ -18,6 +18,8 @@ Here's a usage list highlighting all of it's features:
 
 Features that have require arguments of one type or another are indicated in angle brackets while optional arguments
 are enclosed in square brackets.
+
+--------------------------------------------------------
 
 ##Installation
 The app a number of dependencies as detailed in the `requirements.txt`. To run it, you'll need to install [Python 3.6](http://python.org) from Python's website and setup a virtual environment as illustrated [here](http://docs.python-guide.org/en/latest/dev/virtualenvs/). Dependencies that are built into Python have not been included.
