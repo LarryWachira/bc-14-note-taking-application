@@ -6,10 +6,10 @@ You can store notes, view them, search them and even backup them up locally or o
 Here's a usage list highlighting all of it's features:
 
 ##Usage:
-1. PyNote create '<note_content>...'
-2. PyNote view '<note_id>'
-3. PyNote delete '<note_id>'
-4. PyNote search '<query_string>...' [--limit=N]
+1. PyNote create
+2. PyNote view
+3. PyNote delete
+4. PyNote search [--limit=N]
 5. PyNote list [--limit=N]
 6. *PyNote sync
 7. PyNote import
