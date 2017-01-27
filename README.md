@@ -11,7 +11,7 @@ Here's a usage list highlighting all of it's features:
 3. PyNote delete <note_id>
 4. PyNote search <query_string>... [--limit=N]
 5. PyNote list [--limit=N]
-6. PyNote sync
+6. *PyNote sync
 7. PyNote import
 8. PyNote export
 9. PyNote help
@@ -25,3 +25,7 @@ The app a number of dependencies as detailed in the `requirements.txt`. To run i
 The last and final step will be to install the dependencies by typing `pip install -r requirements.txt`
 
 With that done. All you need now is to clone the repo and run `python app.py -i` in your command line to test out the app.
+
+--------------------------------------------------------
+
+Note: The sync command is currently disabled due to a bug that breaks the exit command
