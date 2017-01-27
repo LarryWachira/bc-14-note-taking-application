@@ -126,11 +126,6 @@ class PyNote(cmd.Cmd):
         import_json()
 
     @docopt_cmd
-    def do_sync(self, arg):
-        """Usage: sync"""
-        sync()
-
-    @docopt_cmd
     def do_help(self, arg):
         """Usage: help"""
         print('''
