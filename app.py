@@ -7,6 +7,9 @@ Usage:
     PyNote delete <note_id>
     PyNote search <query_string>... [--limit=N]
     PyNote list [--limit=N]
+    PyNote sync
+    PyNote import
+    PyNote export
     PyNote help
     PyNote (-i | --interactive)
     PyNote (-h | --help)
@@ -56,7 +59,7 @@ def docopt_cmd(func):
 
 
 class PyNote(cmd.Cmd):
-    intro = '\n\t\t\t\tWelcome to PyNote!\n\t    -Type help for a list for instructions on how to use the app-'
+    intro = '\n\t\t\t\tWelcome to PyNote!\n\t    -Type help for a list of instructions on how to use the app-'
     prompt = '\nPlease type a command >> '
     file = None
     ts = time.time()
@@ -87,9 +90,9 @@ class PyNote(cmd.Cmd):
 
             if answer == 'yes' or answer == 'YES' or answer == 'Yes':
                 delete_note(note_id)
-                print('Note deleted!')
+                print('\n\tNote deleted!')
             else:
-                print('Operation Cancelled!')
+                print('\n\tOperation Cancelled!')
 
     @docopt_cmd
     def do_search(self, args):
