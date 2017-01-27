@@ -5,7 +5,7 @@ PyNote is a command line note taking application with a lot of essential feature
 You can store notes, view them, search them and even backup them up locally or on firebase.
 Here's a usage list highlighting all of it's features:
 
-* Usage:
+##Usage:
 1. PyNote create <note_content>...
 2. PyNote view <note_id>
 3. PyNote delete <note_id>
