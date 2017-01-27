@@ -6,15 +6,15 @@ You can store notes, view them, search them and even backup them up locally or o
 Here's a usage list highlighting all of it's features:
 
 *Usage:
-    *PyNote create <note_content>...
-    *PyNote view <note_id>
-    *PyNote delete <note_id>
-    *PyNote search <query_string>... [--limit=N]
-    *PyNote list [--limit=N]
-    *PyNote sync
-    *PyNote import
-    *PyNote export
-    *PyNote help
+1.*PyNote create <note_content>...
+2.*PyNote view <note_id>
+3.*PyNote delete <note_id>
+4.*PyNote search <query_string>... [--limit=N]
+5.*PyNote list [--limit=N]
+6.*PyNote sync
+7.*PyNote import
+8.*PyNote export
+9.*PyNote help
 
 Features that have require arguments of one type or another are indicated in angle brackets while optional arguments
 are enclosed in square brackets.
