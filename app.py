@@ -7,6 +7,8 @@ Usage:
     PyNote delete <note_id>
     PyNote search <query_string>... [--limit=N]
     PyNote list [--limit=N]
+    PyNote import
+    PyNote export
     PyNote help
     PyNote (-i | --interactive)
     PyNote (-h | --help)
@@ -135,6 +137,8 @@ class PyNote(cmd.Cmd):
       \t   delete <note_id>                                |  Deletes the note that has the given Id
       \t   search <query_string> --limit [<items_per_page>]|  Searches all notes that have the given keyword
       \t   list [--limit <items_per_page>]                 |  Lists all stored notes
+      \t   import                                          |  Imports notes from a local json file
+      \t   export                                          |  Exports notes to a local json file
       \t   help                                            |  Help instructions
 
       \t-Words enclosed in guillemetes '< >' should guide you on the required number
