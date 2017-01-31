@@ -16,13 +16,13 @@ Here's a usage list highlighting all of it's features:
 8. PyNote export
 9. PyNote help
 
-Features that have require arguments of one type or another are indicated in angle brackets while optional arguments
+Features that require arguments of one type or another are indicated in angle brackets while optional arguments
 are enclosed in square brackets.
 
 --------------------------------------------------------
 
 ##Installation
-The app a number of dependencies as detailed in the `requirements.txt`. To run it, you'll need to install [Python 3.6](http://python.org) from Python's website and setup a virtual environment as illustrated [here](http://docs.python-guide.org/en/latest/dev/virtualenvs/). Dependencies that are built into Python have not been included.
+The app has a number of dependencies as detailed in the `requirements.txt`. To run it, you'll need to install [Python 3.6](http://python.org) from Python's website and setup a virtual environment as illustrated [here](http://docs.python-guide.org/en/latest/dev/virtualenvs/). Dependencies that are built into Python have not been included.
 
 The last and final step will be to install the dependencies by typing `pip install -r requirements.txt`
 
@@ -30,4 +30,4 @@ With that done. All you need now is to clone the repo and run `python app.py -i`
 
 --------------------------------------------------------
 
-Note: The sync command is currently disabled due to a bug that breaks the exit command
+Note: The sync command is currently disabled due to a bug that breaks the exit command. It is still available on the sync-feature branch if you would like to try it out.

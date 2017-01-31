@@ -2,8 +2,6 @@
 
 import sqlite3
 import json
-from firebase import firebase
-import requests
 
 conn = sqlite3.connect('PyNote.db')
 cur = conn.cursor()
@@ -200,32 +198,6 @@ def import_json():
 
     else:
         print('\n\tInvalid input.')
-
-
-def sync():
-    try:
-        response = requests.get("https://pynote-536fd.firebaseio.com/")
-        if response.status_code == 200:
-            answer = input('\n\tWould you like to sync your notes to firebase?\n\nType yes or no: ')
-
-            if answer == 'YES' or answer == 'yes' or answer == 'y' or answer == 'Yes':
-                cur.execute('''SELECT * FROM PyNotes''')
-                data = cur.fetchall()
-                fbase = firebase.FirebaseApplication('https://pynote-536fd.firebaseio.com/')
-                result = fbase.post('/db', json.dumps(data))
-                print('\n\tSync successful.\n\tSync snapshot: ', result)
-
-            elif answer == 'NO' or answer == 'no' or answer == 'n' or answer == 'No':
-                print('\n\tSync aborted.')
-
-            else:
-                print('\n\tInvalid input.')
-
-        else:
-            print('\n\tServer Unavailable.')
-
-    except:
-        print('\n\tError occurred.')
 
 
 def close_db():

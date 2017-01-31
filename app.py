@@ -7,7 +7,6 @@ Usage:
     PyNote delete <note_id>
     PyNote search <query_string>... [--limit=N]
     PyNote list [--limit=N]
-    PyNote sync
     PyNote import
     PyNote export
     PyNote help
@@ -59,7 +58,7 @@ def docopt_cmd(func):
 
 
 class PyNote(cmd.Cmd):
-    intro = '\n\t\t\t\tWelcome to PyNote!\n\t    -Type help for a list of instructions on how to use the app-'
+    intro = '\n\t\t\t\tWelcome to PyNote!\n\t    -Type help for a list for instructions on how to use the app-'
     prompt = '\nPlease type a command >> '
     file = None
     ts = time.time()
@@ -90,9 +89,9 @@ class PyNote(cmd.Cmd):
 
             if answer == 'yes' or answer == 'YES' or answer == 'Yes':
                 delete_note(note_id)
-                print('\n\tNote deleted!')
+                print('Note deleted!')
             else:
-                print('\n\tOperation Cancelled!')
+                print('Operation Cancelled!')
 
     @docopt_cmd
     def do_search(self, args):
@@ -129,11 +128,6 @@ class PyNote(cmd.Cmd):
         import_json()
 
     @docopt_cmd
-    def do_sync(self, arg):
-        """Usage: sync"""
-        sync()
-
-    @docopt_cmd
     def do_help(self, arg):
         """Usage: help"""
         print('''
@@ -143,6 +137,8 @@ class PyNote(cmd.Cmd):
       \t   delete <note_id>                                |  Deletes the note that has the given Id
       \t   search <query_string> --limit [<items_per_page>]|  Searches all notes that have the given keyword
       \t   list [--limit <items_per_page>]                 |  Lists all stored notes
+      \t   import                                          |  Imports notes from a local json file
+      \t   export                                          |  Exports notes to a local json file
       \t   help                                            |  Help instructions
 
       \t-Words enclosed in guillemetes '< >' should guide you on the required number
