@@ -28,6 +28,4 @@ The last and final step will be to install the dependencies by typing `pip insta
 
 With that done. All you need now is to clone the repo and run `python app.py -i` in your command line to test out the app.
 
---------------------------------------------------------
-
-Note: The sync command is currently disabled due to a bug that breaks the exit command. It is still available on the sync-feature branch if you would like to try it out.
+---------------------------------------------------------
