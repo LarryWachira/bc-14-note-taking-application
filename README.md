@@ -22,7 +22,7 @@ are enclosed in square brackets.
 --------------------------------------------------------
 
 ##Installation
-The app has a number of dependencies as detailed in the `requirements.txt`. To run it, you'll need to install [Python 3.6](http://python.org) from Python's website and setup a virtual environment as illustrated [here](http://docs.python-guide.org/en/latest/dev/virtualenvs/). Dependencies that are built into Python have not been included.
+The app has a number of dependencies as detailed in `requirements.txt`. To run it, you'll need to install [Python 3.6](http://python.org) from Python's website and setup a virtual environment as illustrated [here](http://docs.python-guide.org/en/latest/dev/virtualenvs/). Dependencies that are built into Python have not been included.
 
 The last and final step will be to install the dependencies by typing `pip install -r requirements.txt`
 
