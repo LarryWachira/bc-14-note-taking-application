@@ -9,6 +9,7 @@ Usage:
     PyNote list [--limit=N]
     PyNote import
     PyNote export
+    PyNote sync
     PyNote help
     PyNote (-i | --interactive)
     PyNote (-h | --help)
@@ -57,9 +58,11 @@ def docopt_cmd(func):
     return fn
 
 
+database = NotesDatabase()
+
 class PyNote(cmd.Cmd):
     intro = '\n\t\t\t\tWelcome to PyNote!\n\t    -Type help for a list for instructions on how to use the app-'
-    prompt = '\nPlease type a command >> '
+    prompt = '\nPyNote| Please type a command >> '
     file = None
     ts = time.time()
     date_time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
@@ -68,14 +71,14 @@ class PyNote(cmd.Cmd):
     def do_create(self, args):
         """Usage: create <note_content>..."""
         note_content = list_to_string(args)
-        create_note(note_content)
-        print('\n\t\''+ note_content + '\'' + ' | note has been created.\n\t Timestamp | ' + self.date_time)
+        database.create_note(note_content)
+        print('\n\t\'' + note_content + '\'' + ' | note has been created.\n\t Timestamp | ' + self.date_time)
 
     @docopt_cmd
     def do_view(self, arg):
         """Usage: view <note_id>"""
         note_id = num_check(arg)
-        view_note(note_id)
+        database.view_note(note_id)
 
     @docopt_cmd
     def do_delete(self, arg):
@@ -84,14 +87,14 @@ class PyNote(cmd.Cmd):
 
         if isinstance(note_id, int):
             print('\n  Are you sure you want to delete:')
-            view_note(note_id)
+            database.view_note(note_id)
             answer = input("\n  Type yes to confirm or anything else to abort > ")
 
             if answer == 'yes' or answer == 'YES' or answer == 'Yes':
-                delete_note(note_id)
-                print('Note deleted!')
+                database.delete_note(note_id)
+                print('\n\tNote deleted!')
             else:
-                print('Operation Cancelled!')
+                print('\n\tOperation Cancelled!')
 
     @docopt_cmd
     def do_search(self, args):
@@ -100,10 +103,10 @@ class PyNote(cmd.Cmd):
         items_per_page = num_check_limit(args)
 
         if args['--limit'] is not None:
-            paginated_search(query_string, items_per_page)
+            database.paginated_search(query_string, items_per_page)
 
         elif args['--limit'] is None:
-            note_search(query_string)
+            database.note_search(query_string)
 
         else:
             pass
@@ -112,20 +115,20 @@ class PyNote(cmd.Cmd):
     def do_list(self, arg):
         """Usage: list [--limit=N]"""
         if arg['--limit'] is None:
-            note_list()
+            database.note_list()
         else:
             items_per_page = num_check_limit(arg)
-            paginated_list(items_per_page)
+            database.paginated_list(items_per_page)
 
     @docopt_cmd
     def do_export(self, arg):
         """Usage: export"""
-        export_json()
+        database.export_json()
 
     @docopt_cmd
     def do_import(self, arg):
         """Usage: import"""
-        import_json()
+        database.import_json()
 
     @docopt_cmd
     def do_help(self, arg):
@@ -151,7 +154,7 @@ class PyNote(cmd.Cmd):
 
     def do_exit(self, arg):
         """Us"""
-        close_db()
+        database.close_db()
         print('\n' + '*' * 50 + '\n')
         print('\tThank you for using PyNote!\n')
         print('*'*50)
