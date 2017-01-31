@@ -116,8 +116,12 @@ class NotesDatabase:
         self.cur.execute('''SELECT * FROM PyNotes''')
         results = self.cur.fetchall()
 
-        for row in results:
-            print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
+        if len(results) == 0:
+            print("\n\tNo notes available.")
+
+        else:
+            for row in results:
+                print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
 
     def paginated_list(self, items_per_page):
 
@@ -125,35 +129,40 @@ class NotesDatabase:
             self.cur.execute('''SELECT * FROM PyNotes LIMIT ? ''', [items_per_page])
             results = self.cur.fetchall()
 
-            for row in results:
-                print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
+            if len(results) == 0:
+                print("\n\tNo notes available.")
 
-            self.cur.execute('''SELECT COUNT(Note) FROM PyNotes''')
-            result = self.cur.fetchone()
+            else:
+                for row in results:
+                    print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
 
-            num_of_rows = result[0]
-            new_offset = items_per_page
+                self.cur.execute('''SELECT COUNT(Note) FROM PyNotes''')
+                result = self.cur.fetchone()
 
-            while new_offset < (num_of_rows + 1):
-                response = input('\nType N to go to Next Page or Q to quit > ')
+                num_of_rows = result[0]
+                new_offset = items_per_page
 
-                if response == 'N' or response == 'n':
-                    self.cur.execute('''SELECT * FROM PyNotes LIMIT ? OFFSET ?''',(items_per_page, new_offset))
-                    results = self.cur.fetchall()
+                while new_offset < (num_of_rows + 1):
+                    response = input('\nType N to go to Next Page or Q to quit > ')
 
-                    for row in results:
-                        print('\n\tNote ID: ' + str(row[0]) + '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
+                    if response == 'N' or response == 'n':
+                        self.cur.execute('''SELECT * FROM PyNotes LIMIT ? OFFSET ?''', (items_per_page, new_offset))
+                        results = self.cur.fetchall()
 
-                    new_offset += items_per_page
+                        for row in results:
+                            print('\n\tNote ID: ' + str(row[0]) +
+                                  '\n\tDate Added: ' + str(row[2]) + '\n\tNote: ' + row[1])
 
-                elif response == 'Q' or response == 'q':
-                    break
+                        new_offset += items_per_page
 
-                else:
-                    print('Invalid Input')
-                continue
+                    elif response == 'Q' or response == 'q':
+                        break
 
-            print('\n\tEnd of notes.')
+                    else:
+                        print('Invalid Input')
+                    continue
+
+                print('\n\tEnd of notes.')
 
         else:
             pass
