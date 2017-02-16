@@ -1,6 +1,7 @@
 [![Code Climate](https://codeclimate.com/github/LarryWachira/bc-14-note-taking-application/badges/gpa.svg)](https://codeclimate.com/github/LarryWachira/bc-14-note-taking-application)
 [![Issue Count](https://codeclimate.com/github/LarryWachira/bc-14-note-taking-application/badges/issue_count.svg)](https://codeclimate.com/github/LarryWachira/bc-14-note-taking-application)
-[![Code Health](https://landscape.io/github/LarryWachira/bc-14-note-taking-application/master/landscape.svg?style=plastic)](https://landscape.io/github/LarryWachira/bc-14-note-taking-application/master)
+[![Code Health](https://landscape.io/github/LarryWachira/bc-14-note-taking-application/master/landscape.svg?style=flat)](https://landscape.io/github/LarryWachira/bc-14-note-taking-application/master)
+
 #Andela Kenya boot camp XIV project:
 ##Note taking command line application ('PyNote')
 
